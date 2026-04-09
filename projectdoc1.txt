@@ -1,0 +1,98 @@
+--create and open the database
+
+create database healthcareapp;
+use healthcareapp;
+
+--create and insert patient_info
+
+create table patient_info (
+    patientno int primary key,
+    pname varchar(40) not null,
+    page int not null,
+    pgender varchar(15) not null,
+    contactno varchar(15) not null,
+    disease varchar(30) not null
+
+
+);
+
+
+--create and insert doctor records
+
+create table doctor (
+    doctorno int primary key,
+    drname varchar(50) not null,
+    special varchar(50) not null,
+    drcontact varchar(15) not null,
+    drqual varchar(30) not null
+);
+
+insert into doctor(doctorno, drname, special,drcontact,drqual) values
+(1001,'Dr. Sam', 'Cardiologist', '92123456',"Mbbs,MD"),
+(1002,'Dr. salman', 'Dermatologist', '223371745','fcmg'),
+(1003,'Dr. Ver', 'Neurologist', '7773334444','famg'),
+(1004,'Dr. Sin', 'Orthopedic', '6664445555','md'),
+(1005,'Dr. GPD', 'Pediatrician', '5556667777','ms');
+
+
+
+
+--create and insert appointment records
+
+ create table apprecord (
+    appointmentno int primary key,
+    patientno int,
+    doctorno int,
+    dateofappointment date,
+    status varchar(30),
+    foreign key(doctorno) references doctor(doctorno),
+   foreign key(patientno) references patient_info(patientno)
+	
+);
+
+insert into patient_info(patientno, pname, page, pgender, contactno, disease)
+values
+(1, 'abc', 25, 'Male', '9826143210', 'Fever'),
+(2, 'xyz', 32, 'Female', '9123456780', 'Sneezing'),
+(3, 'mel', 43, 'Male', '9988776655', 'Heart Disease'),
+(4, 'phn', 31, 'Female', '8074903090', 'Skin Allergy'),
+(5, 'abn', 36, 'Male', '9012745648', 'Headache');
+
+insert into  Apprecord(appointmentno,patientno,doctorno,dateofappointment, status)
+values
+(11, 1,1001, '2026-04-08', 'Completed'),
+(12, 2, 1001,'2026-04-11', 'Scheduled'),
+(13, 3, 1002,'2026-04-12', 'Scheduled'),
+(14, 4, 1004,'2026-04-13', 'Cancelled'),
+(15, 5,1005, '2026-04-14', 'Scheduled');
+
+CURD operations
+==============
+
+--update (updating or changing data)
+
+update apprecord set status = 'Scheduled' where appointmentno = 14;
+
+--increasing column size
+
+alter table patient_info 
+modify disease varchar(50);
+
+--deleting the record
+delete from apprecord where status='completed';
+
+--display number of appointements on each date
+
+select count(*), dateofappointment from apprecord group by dateofappointment;
+
+--display patient name, doctor name , date of appointment of all patients using join
+
+select pname,drname,dateofappointment from doctor,patient_info,apprecord 
+where patient_info.patientno=apprecord.patientno and doctor.doctorno=apprecord.doctorno;
+
+
+
+
+
+
+
